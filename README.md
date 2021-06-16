@@ -9,7 +9,7 @@ Este projeto é faz parte do curso de Introdução ao Kafka: Produtores, Consumi
 - [Java JDK 11+](https://www.oracle.com/br/java/technologies/javase-jdk11-downloads.html)
 - [Kafka](https://kafka.apache.org/downloads)
 
-### Material de apoio 
+### 🆘 Material de apoio 
 Dependendo do SO que esteja utilizando a instalação do Kafka tende a ser bem trabalhosa,
 então esse o link abaixo pode te ajudar a instala-lo no windows.
 
