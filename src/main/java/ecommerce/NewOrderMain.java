@@ -1,5 +1,6 @@
 package ecommerce;
 
+import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -26,7 +27,7 @@ public class NewOrderMain {
         // envia o registro para o kafka
         // pode receber um callback como usado abaixo
         // para printar na tela se o envio foi com sucesso ou nao
-        producer.send(record, (data, ex) -> {
+        Callback callback = (data, ex) -> {
             if (ex != null) {
                 ex.printStackTrace();
                 return;
@@ -39,11 +40,19 @@ public class NewOrderMain {
                     + data.offset()
                     + "/ timestamp"
                     + data.timestamp());
-        }).get();
+        };
+
         // por default o metodo send eh assincrono, porem precisamos
         // esperar com que ele envie o registro para o kafka e possamos
         // ver uma mensagem de sucesso, para isso usamos o metodo get
         // ele deixa o comportamento do send como sincrono (pode-se dizer)
+        producer.send(record, callback).get();
+
+        var email = "Thanks you for your order! We are processing your order!";
+        var emailRecord = new ProducerRecord<>("ECOMMERCE_SEND_EMAIL", email, email);
+        producer.send(emailRecord, callback).get();
+
+
     }
 
     // Properties usado para criacao do producer
