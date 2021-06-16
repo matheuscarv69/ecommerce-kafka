@@ -16,7 +16,7 @@ public class NewOrderMain {
         var producer = new KafkaProducer<String, String>(properties());
 
         // cria uma mensagem
-        var value = "132123,67523, 7894589745";
+        var value = "132123,67523, 1234";
 
         // objeto de registro, ele diz qual o topico e qual a mensagem,
         // porem ele recebe no tipo key, value
