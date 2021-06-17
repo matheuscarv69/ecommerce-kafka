@@ -1,6 +1,7 @@
-package ecommerce;
+package ecommerce.producersServices;
 
-import org.apache.kafka.clients.producer.ProducerRecord;
+import ecommerce.model.Order;
+import ecommerce.producersServices.core.KafkaDispatcher;
 
 import java.math.BigDecimal;
 import java.util.UUID;

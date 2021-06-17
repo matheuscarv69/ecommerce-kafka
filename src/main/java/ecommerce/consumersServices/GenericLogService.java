@@ -1,5 +1,6 @@
-package ecommerce;
+package ecommerce.consumersServices;
 
+import ecommerce.consumersServices.core.KafkaService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import java.util.regex.Pattern;

@@ -1,14 +1,15 @@
-package ecommerce;
+package ecommerce.consumersServices;
 
+import ecommerce.consumersServices.core.KafkaService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
-public class FraudDetectorService {
+public class EmailService {
 
     public static void main(String[] args) {
-        var fraudService = new FraudDetectorService();
+        var emailService = new EmailService();
         try (var service = new KafkaService(FraudDetectorService.class.getSimpleName(),
-                "ECOMMERCE_NEW_ORDER",
-                fraudService::parse)) {
+                "ECOMMERCE_SEND_EMAIL",
+                emailService::parse)) {
 
             service.run();
         }
@@ -16,7 +17,7 @@ public class FraudDetectorService {
 
     private void parse(ConsumerRecord<String, String> record) {
         System.out.println("---------------------");
-        System.out.println("Processesing new order, checking for fraud");
+        System.out.println("Send email");
         System.out.println("key: " + record.key());
         System.out.println("value: " + record.value());
         System.out.println("partition: " + record.partition());
@@ -24,11 +25,11 @@ public class FraudDetectorService {
 
         // simulando uma fraude
         try {
-            Thread.sleep(5000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
-            System.out.println("fraud simulation");
+            System.out.println("send email simulation");
         }
-        System.out.println("Order processed");
+        System.out.println("Email sent");
     }
 
 }

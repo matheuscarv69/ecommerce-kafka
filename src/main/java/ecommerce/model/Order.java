@@ -1,4 +1,4 @@
-package ecommerce;
+package ecommerce.model;
 
 import java.math.BigDecimal;
 
