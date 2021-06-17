@@ -23,8 +23,8 @@ public class FraudDetectorService {
         // while para o consumer ficar rodando constantemente
         while (true) {
 
-            // Esse poll eh a funcao utilizada para mandar o consumer escurtar o topico
-            //recebe um tempo, ele eh a duracao que o consumer deve escutar o topico
+            // Esse poll eh a funcao utilizada para mandar o consumer escutar o topico
+            // recebe um tempo, ele eh a duracao que o consumer deve escutar o topico
             // vai escutar o topico por 100 milisecundos
             var records = consumer.poll(Duration.ofMillis(100));
 
@@ -65,6 +65,12 @@ public class FraudDetectorService {
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, FraudDetectorService.class.getSimpleName());
         // configura um id para o consumer
         properties.setProperty(ConsumerConfig.CLIENT_ID_CONFIG, FraudDetectorService.class.getSimpleName() + "-" + UUID.randomUUID().toString());
+        // Essa prop serve para o poll ir commitando uma mensagem por vez, pois quando ele fica livre sem
+        // essa prop o kafka faz o rebalanceamento enquanto ainda esta processando as mensagens, assim esse consumer
+        // para de receber as mensagens pois ele ja esta diferente de como quando foi iniciado.
+        // Com essa prop o poll lá em cima irá processar de uma em uma as mensagens sequencialmente
+        // Previne de executar a mesma mensagem duas vezes
+        properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1");
 
         return properties;
     }
