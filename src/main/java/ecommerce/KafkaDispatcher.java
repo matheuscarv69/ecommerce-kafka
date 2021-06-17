@@ -10,28 +10,15 @@ import java.io.Closeable;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
-public class KafkaDispatcher implements Closeable {
+public class KafkaDispatcher<T> implements Closeable {
 
-    private final KafkaProducer<String, String> producer;
+    private final KafkaProducer<String, T> producer;
 
     public KafkaDispatcher() {
         this.producer = new KafkaProducer<>(properties());
     }
 
-    // Properties usado para criacao do producer
-    private static Properties properties() {
-        var properties = new Properties();
-        // define a propriedade de local do kafka (localhost:9092)
-        properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
-        // define a maneira como se deve ser deserializada a chave que será recebida no recod
-        properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        // define a maneira como se deve ser deserializada o valor que será recebida no recod
-        properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-
-        return properties;
-    }
-
-    public void send(String topic, String key, String value) throws ExecutionException, InterruptedException {
+    public void send(String topic, String key, T value) throws ExecutionException, InterruptedException {
         // objeto de registro, ele diz qual o topico e qual a mensagem,
         // porem ele recebe no tipo key, value
         // mas aqui estamos mandando o mesmo texto para os dois
@@ -45,6 +32,7 @@ public class KafkaDispatcher implements Closeable {
                 ex.printStackTrace();
                 return;
             }
+
             System.out.println("Sucesso enviado: "
                     + data.topic()
                     + ":::partition "
@@ -60,6 +48,19 @@ public class KafkaDispatcher implements Closeable {
         // ver uma mensagem de sucesso, para isso usamos o metodo get
         // ele deixa o comportamento do send como sincrono (pode-se dizer)
         producer.send(record, callback).get();
+    }
+
+    // Properties usado para criacao do producer
+    private static Properties properties() {
+        var properties = new Properties();
+        // define a propriedade de local do kafka (localhost:9092)
+        properties.setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
+        // define a maneira como se deve ser deserializada a chave que será recebida no recod
+        properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        // define a maneira como se deve ser deserializada o valor que será recebida no recod
+        properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, GsonSerializer.class.getName());
+
+        return properties;
     }
 
     /**

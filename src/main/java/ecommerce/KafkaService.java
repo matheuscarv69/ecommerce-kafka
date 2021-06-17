@@ -58,7 +58,8 @@ public class KafkaService implements Closeable {
         // entre a quantidade de mensagens
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         properties.setProperty(ConsumerConfig.CLIENT_ID_CONFIG, UUID.randomUUID().toString());
-
+        // Previne de executar a mesma mensagem duas vezes
+        properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1");
         return properties;
     }
 
