@@ -1,8 +1,11 @@
 package ecommerce.consumersServices;
 
 import ecommerce.consumersServices.core.KafkaService;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.common.serialization.StringDeserializer;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class GenericLogService {
@@ -15,7 +18,8 @@ public class GenericLogService {
         try (var service = new KafkaService(GenericLogService.class.getSimpleName(),
                 Pattern.compile("ECOMMERCE.*"),
                 logService::parse,
-                String.class)) {
+                String.class,
+                Map.of(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName()))) {
 
             service.run();
         }
