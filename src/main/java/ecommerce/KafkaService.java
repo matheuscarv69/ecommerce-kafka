@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class KafkaService implements Closeable {
 
@@ -18,14 +19,35 @@ public class KafkaService implements Closeable {
     public KafkaService(String groupId,
                         String topic,
                         ConsumerFunction parse) {
-        this.parse = parse;
 
-        // cria um consumer do kafka
-        this.consumer = new KafkaConsumer<>(properties(groupId));
+        this(groupId, parse);
 
         // informa qual topico esse consumer vai escutar - recebe uma lista de topicos, mas
         // nao eh utilizado dessa forma, um consumer escuta um topico na maioria das vezes
         consumer.subscribe(Collections.singletonList(topic));
+    }
+
+    /**
+     * Construtor que recebe um Pattern,
+     * recebe um regex - usado principalmente no
+     * GenericLogService
+     * */
+    public KafkaService(String groupId,
+                        Pattern topic,
+                        ConsumerFunction parse) {
+        this(groupId, parse);
+        consumer.subscribe(topic);
+    }
+
+    /**
+     * Construtor utilizado para instanciar o consumer
+     * Ele eh utitlizado somente pelos os outros construtores
+     * dessa classe
+     * */
+    private KafkaService(String groupId,
+                        ConsumerFunction parse) {
+        this.consumer = new KafkaConsumer<>(properties(groupId));
+        this.parse = parse;
     }
 
     public void run() {
