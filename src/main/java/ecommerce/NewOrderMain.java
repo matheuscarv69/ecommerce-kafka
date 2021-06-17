@@ -17,8 +17,8 @@ public class NewOrderMain {
         // cria um producer do kafka, recebe um objeto Properties (criado lá no final)
         var producer = new KafkaProducer<String, String>(properties());
 
-        // For para enviar 100 mensagens e verificarmos se o balaceamento esta funcionando
-        for (var i = 0; i < 100; i++) {
+        // For para enviar 10 mensagens e verificarmos se o balaceamento esta funcionando
+        for (var i = 0; i < 10; i++) {
             // Key utilizada para o kafka conseguir fazer o balanceamento de carga
             // ele irá balencear em qual partition a mensagem irá cair
             var key = UUID.randomUUID().toString();
