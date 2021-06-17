@@ -4,13 +4,13 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
+import java.io.Closeable;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.UUID;
 
-public class KafkaService {
-
+public class KafkaService implements Closeable {
 
     private final KafkaConsumer<String, String> consumer;
     private final ConsumerFunction parse;
@@ -25,7 +25,7 @@ public class KafkaService {
 
         // informa qual topico esse consumer vai escutar - recebe uma lista de topicos, mas
         // nao eh utilizado dessa forma, um consumer escuta um topico na maioria das vezes
-        consumer.subscribe(Collections.singletonList("ECOMMERCE_SEND_EMAIL"));
+        consumer.subscribe(Collections.singletonList(topic));
     }
 
     public void run() {
@@ -62,4 +62,11 @@ public class KafkaService {
         return properties;
     }
 
+    /**
+     * Fecha a porta ao terminar de consumir
+     */
+    @Override
+    public void close() {
+        consumer.close();
+    }
 }
