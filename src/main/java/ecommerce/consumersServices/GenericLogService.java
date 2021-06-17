@@ -14,7 +14,8 @@ public class GenericLogService {
         // cria um consumer do kafka
         try (var service = new KafkaService(GenericLogService.class.getSimpleName(),
                 Pattern.compile("ECOMMERCE.*"),
-                logService::parse)) {
+                logService::parse,
+                String.class)) {
 
             service.run();
         }

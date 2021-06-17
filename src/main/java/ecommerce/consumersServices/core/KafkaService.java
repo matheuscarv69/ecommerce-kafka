@@ -1,5 +1,7 @@
 package ecommerce.consumersServices.core;
 
+import ecommerce.gson.GsonDeserializer;
+import ecommerce.model.Order;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -11,16 +13,17 @@ import java.util.Properties;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-public class KafkaService implements Closeable {
+public class KafkaService<T> implements Closeable {
 
-    private final KafkaConsumer<String, String> consumer;
+    private final KafkaConsumer<String, T> consumer;
     private final ConsumerFunction parse;
 
     public KafkaService(String groupId,
                         String topic,
-                        ConsumerFunction parse) {
+                        ConsumerFunction parse,
+                        Class<T> clazzType) {
 
-        this(groupId, parse);
+        this(groupId, parse, clazzType);
 
         // informa qual topico esse consumer vai escutar - recebe uma lista de topicos, mas
         // nao eh utilizado dessa forma, um consumer escuta um topico na maioria das vezes
@@ -31,11 +34,13 @@ public class KafkaService implements Closeable {
      * Construtor que recebe um Pattern,
      * recebe um regex - usado principalmente no
      * GenericLogService
-     * */
+     */
     public KafkaService(String groupId,
                         Pattern topic,
-                        ConsumerFunction parse) {
-        this(groupId, parse);
+                        ConsumerFunction parse,
+                        Class<T> clazzType) {
+
+        this(groupId, parse, clazzType);
         consumer.subscribe(topic);
     }
 
@@ -43,10 +48,11 @@ public class KafkaService implements Closeable {
      * Construtor utilizado para instanciar o consumer
      * Ele eh utitlizado somente pelos os outros construtores
      * dessa classe
-     * */
+     */
     private KafkaService(String groupId,
-                        ConsumerFunction parse) {
-        this.consumer = new KafkaConsumer<>(properties(groupId));
+                         ConsumerFunction parse,
+                         Class<T> clazzType) {
+        this.consumer = new KafkaConsumer<>(properties(groupId, clazzType));
         this.parse = parse;
     }
 
@@ -69,11 +75,12 @@ public class KafkaService implements Closeable {
         }
     }
 
-    private static Properties properties(String groupId) {
+    private Properties properties(String groupId, Class<T> clazzType) {
         var properties = new Properties();
         properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, GsonDeserializer.class.getName());
+        properties.setProperty(GsonDeserializer.TYPE_CONFIG, clazzType.getName());
 
         // Eh preciso criar um grupo para o consumer poder receber todas as mensagens do producer
         // Eh possivel ter outro consumer com o mesmo id, porem o kafka vai fazer um balanceamento
@@ -82,6 +89,7 @@ public class KafkaService implements Closeable {
         properties.setProperty(ConsumerConfig.CLIENT_ID_CONFIG, UUID.randomUUID().toString());
         // Previne de executar a mesma mensagem duas vezes
         properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1");
+
         return properties;
     }
 

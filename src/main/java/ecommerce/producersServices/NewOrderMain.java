@@ -1,5 +1,6 @@
 package ecommerce.producersServices;
 
+import ecommerce.model.Email;
 import ecommerce.model.Order;
 import ecommerce.producersServices.core.KafkaDispatcher;
 
@@ -14,7 +15,7 @@ public class NewOrderMain {
 
         // cria um producer do kafka, recebe um objeto Properties
         try (var orderDispatcher = new KafkaDispatcher<Order>()) {
-            try (var emailDispatcher = new KafkaDispatcher<String>()) {
+            try (var emailDispatcher = new KafkaDispatcher<Email>()) {
 
                 // For para enviar 10 mensagens e verificarmos se o balaceamento esta funcionando
                 for (var i = 0; i < 10; i++) {
@@ -28,7 +29,7 @@ public class NewOrderMain {
 
                     orderDispatcher.send("ECOMMERCE_NEW_ORDER", userId, order);
 
-                    var email = "Thanks you for your order! We are processing your order!";
+                    var email = new Email("Congratulations!", "Thanks you for your order! We are processing your order!");
                     emailDispatcher.send("ECOMMERCE_SEND_EMAIL", userId, email);
                 }
             }
