@@ -7,6 +7,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.util.Properties;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 public class NewOrderMain {
@@ -16,42 +17,48 @@ public class NewOrderMain {
         // cria um producer do kafka, recebe um objeto Properties (criado lá no final)
         var producer = new KafkaProducer<String, String>(properties());
 
-        // cria uma mensagem
-        var value = "132123,67523, 1234";
+        // For para enviar 100 mensagens e verificarmos se o balaceamento esta funcionando
+        for (var i = 0; i < 100; i++) {
+            // Key utilizada para o kafka conseguir fazer o balanceamento de carga
+            // ele irá balencear em qual partition a mensagem irá cair
+            var key = UUID.randomUUID().toString();
 
-        // objeto de registro, ele diz qual o topico e qual a mensagem,
-        // porem ele recebe no tipo key, value
-        // mas aqui estamos mandando o mesmo texto para os dois
-        var record = new ProducerRecord<>("ECOMMERCE_NEW_ORDER", value, value);
+            // cria uma mensagem
+            var value = key + "132123,67523, 1234";
 
-        // envia o registro para o kafka
-        // pode receber um callback como usado abaixo
-        // para printar na tela se o envio foi com sucesso ou nao
-        Callback callback = (data, ex) -> {
-            if (ex != null) {
-                ex.printStackTrace();
-                return;
-            }
-            System.out.println("Sucesso enviado: "
-                    + data.topic()
-                    + ":::partition "
-                    + data.partition()
-                    + "/ offset "
-                    + data.offset()
-                    + "/ timestamp"
-                    + data.timestamp());
-        };
+            // objeto de registro, ele diz qual o topico e qual a mensagem,
+            // porem ele recebe no tipo key, value
+            // mas aqui estamos mandando o mesmo texto para os dois
+            var record = new ProducerRecord<>("ECOMMERCE_NEW_ORDER", key, value);
 
-        // por default o metodo send eh assincrono, porem precisamos
-        // esperar com que ele envie o registro para o kafka e possamos
-        // ver uma mensagem de sucesso, para isso usamos o metodo get
-        // ele deixa o comportamento do send como sincrono (pode-se dizer)
-        producer.send(record, callback).get();
+            // envia o registro para o kafka
+            // pode receber um callback como usado abaixo
+            // para printar na tela se o envio foi com sucesso ou nao
+            Callback callback = (data, ex) -> {
+                if (ex != null) {
+                    ex.printStackTrace();
+                    return;
+                }
+                System.out.println("Sucesso enviado: "
+                        + data.topic()
+                        + ":::partition "
+                        + data.partition()
+                        + "/ offset "
+                        + data.offset()
+                        + "/ timestamp"
+                        + data.timestamp());
+            };
 
-        var email = "Thanks you for your order! We are processing your order!";
-        var emailRecord = new ProducerRecord<>("ECOMMERCE_SEND_EMAIL", email, email);
-        producer.send(emailRecord, callback).get();
+            // por default o metodo send eh assincrono, porem precisamos
+            // esperar com que ele envie o registro para o kafka e possamos
+            // ver uma mensagem de sucesso, para isso usamos o metodo get
+            // ele deixa o comportamento do send como sincrono (pode-se dizer)
+            producer.send(record, callback).get();
 
+            var email = "Thanks you for your order! We are processing your order!";
+            var emailRecord = new ProducerRecord<>("ECOMMERCE_SEND_EMAIL", key, email);
+            producer.send(emailRecord, callback).get();
+        }
 
     }
 

@@ -7,6 +7,7 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
+import java.util.UUID;
 
 public class FraudDetectorService {
 
@@ -62,6 +63,8 @@ public class FraudDetectorService {
         // Eh possivel ter outro consumer com o mesmo id, porem o kafka vai fazer um balanceamento
         // entre a quantidade de mensagens
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, FraudDetectorService.class.getSimpleName());
+        // configura um id para o consumer
+        properties.setProperty(ConsumerConfig.CLIENT_ID_CONFIG, FraudDetectorService.class.getSimpleName() + "-" + UUID.randomUUID().toString());
 
         return properties;
     }
