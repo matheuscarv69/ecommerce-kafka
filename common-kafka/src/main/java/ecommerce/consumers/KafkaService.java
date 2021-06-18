@@ -1,7 +1,6 @@
-package ecommerce.consumersServices.core;
+package ecommerce.consumers;
 
 import ecommerce.gson.GsonDeserializer;
-import ecommerce.model.Order;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;

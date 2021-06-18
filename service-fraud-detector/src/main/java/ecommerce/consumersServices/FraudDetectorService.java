@@ -1,6 +1,6 @@
 package ecommerce.consumersServices;
 
-import ecommerce.consumersServices.core.KafkaService;
+import ecommerce.consumers.KafkaService;
 import ecommerce.model.Order;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 

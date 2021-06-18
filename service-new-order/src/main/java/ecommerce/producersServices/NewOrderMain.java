@@ -2,7 +2,7 @@ package ecommerce.producersServices;
 
 import ecommerce.model.Email;
 import ecommerce.model.Order;
-import ecommerce.producersServices.core.KafkaDispatcher;
+import ecommerce.producers.KafkaDispatcher;
 
 import java.math.BigDecimal;
 import java.util.UUID;

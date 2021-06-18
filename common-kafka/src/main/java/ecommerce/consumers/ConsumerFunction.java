@@ -1,4 +1,4 @@
-package ecommerce.consumersServices.core;
+package ecommerce.consumers;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 

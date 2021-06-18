@@ -1,4 +1,4 @@
-package ecommerce.producersServices.core;
+package ecommerce.producers;
 
 import ecommerce.gson.GsonSerializer;
 import org.apache.kafka.clients.producer.Callback;
