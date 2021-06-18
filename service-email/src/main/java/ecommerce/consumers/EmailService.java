@@ -1,6 +1,5 @@
-package ecommerce.consumersServices;
+package ecommerce.consumers;
 
-import ecommerce.consumers.KafkaService;
 import ecommerce.model.Email;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 

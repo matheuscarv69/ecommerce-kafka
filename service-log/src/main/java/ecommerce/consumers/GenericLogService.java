@@ -1,6 +1,5 @@
-package ecommerce.consumersServices;
+package ecommerce.consumers;
 
-import ecommerce.consumers.KafkaService;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
