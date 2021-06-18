@@ -1,6 +1,8 @@
 # 🔥 Projeto de Ecommerce ☕
 
-Este projeto é faz parte do curso de Introdução ao Kafka: Produtores, Consumidores e Streams
+Este projeto faz parte do curso de Introdução ao Kafka: Produtores, Consumidores e Streams da Alura.
+
+Ele foi desenvolvido seguindo o conteúdo apresentado no curso com algumas modificações pessoais.
 
 [![GitHub stars](https://img.shields.io/github/stars/matheuscarv69/orange-talents-05-template-proposta?color=orange)](https://github.com/matheuscarv69/orange-talents-05-template-proposta/stargazers)
 
@@ -8,19 +10,72 @@ Este projeto é faz parte do curso de Introdução ao Kafka: Produtores, Consumi
 
 - [Java JDK 11+](https://www.oracle.com/br/java/technologies/javase-jdk11-downloads.html)
 - [Kafka](https://kafka.apache.org/downloads)
+- [Docker-opcional](https://www.docker.com/products/docker-desktop)
+- [Docker-compose-opcional](https://docs.docker.com/compose/install/)
 
 ### 🆘 Material de apoio 
-Dependendo do SO que esteja utilizando a instalação do Kafka tende a ser bem trabalhosa,
-então esse o link abaixo pode te ajudar a instala-lo no windows.
+Dependendo do S.O que você esteja utilizando, a instalação do Kafka tende a ser bem trabalhosa,
+então o link abaixo pode te ajudar a instalá-lo no windows. 
+
+(Tem um **docker-compose** no projeto podes aproveita-lo para evitar dor de cabeça 😏)
 
 - [Tutorial de instalação do kafka no Windows 10](https://ichi.pro/pt/como-instalar-o-apache-kafka-no-windows-facilmente-53170105811632)
 
+### 🐳 Docker
+
+Este projeto conta com um **docker-compose** para subir os containers do Kafka e o do Zookeeper.
+
+Os requisitos necessários são ter instalados:
+
+- [Docker](https://www.docker.com/products/docker-desktop)
+- [Docker-compose](https://docs.docker.com/compose/install/)
+
+## 🎲 Executando o docker-compose
+Com esse repositório já clonado em sua máquina e com todos os pré-requisitos atendidos.
+
+1. Você deve ir até a raiz do projeto onde o arquivo **docker-compose.yml** está. 
+2. Deve abrir um terminal na raiz do projeto.
+3. Agora certifique-se que o seu Docker já está em execução.
+4. Execute o seguinte comando no terminal:
+
+```bash
+docker-compose up -d
+```
+## 🦸‍♂️ Alguns cheatsheats do Kafka
+
+### ❗ Acessando a pasta bin do Kafka dentro do container
+Entre no console do container do Kafka via terminal ou use o Docker Desktop, então navegue até o diretório: **usr/bin**
+
+```bash
+cd usr/bin
+```
+
+### ✅ Lista todos os grupos e os descreve 
+⚠ Obs: Funciona em algumas versões do kafka, não consegui descobrir a última versão compatível
+```bash
+./kafka-consumer-groups --all-groups --bootstrap-server kafka:29092 --describe
+```
+### ✅ Descreve o grupo informado
+```bash
+./kafka-consumer-groups --bootstrap-server kafka:29092 --group EmailService --describe
+```
+### ✅ Observa o Tópico informado
+```bash
+./kafka-console-consumer --bootstrap-server kafka:29092 --topic ECOMMERCE_NEW_ORDER
+```
+### ✅ Altera a quantidade de Partições do Tópico informado 
+```bash
+./kafka-console-consumer --bootstrap-server kafka:29092 --topic ECOMMERCE_NEW_ORDER
+```
+
 ## 🚀 Tecnologias 👩‍🚀
 
-As seguintes tecnologias foram utilizadas e/ou utilizadas no desenvolvimento do projeto.
+As seguintes tecnologias foram utilizadas no desenvolvimento do projeto:
 
 - JDK 11
 - Kafka 2.13-2.8.0
+- Docker
+- Docker-compose
 
 ## 👨🏻‍💻 Autor
 
